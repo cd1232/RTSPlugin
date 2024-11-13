@@ -1,0 +1,41 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "RTS Plugin",
+	"Description": "An example of a script plugin. This can be used as a starting point when creating your own plugin.",
+	"Category": "Gameplay Ability System",
+	"CreatedBy": "Craig Duthie",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EnabledByDefault": false,
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "RTSPlugin",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault",
+			"PlatformDenyList": [
+				"Linux"
+			]
+		},
+		{
+			"Name": "RTSEditorPlugin",
+			"Type": "Editor",
+			"LoadingPhase": "Default",
+			"PlatformDenyList": [
+				"Linux"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "GameplayAbilities",
+			"Enabled": true
+		}
+	]
+}
