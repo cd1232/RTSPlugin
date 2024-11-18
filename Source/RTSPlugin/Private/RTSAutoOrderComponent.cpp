@@ -167,6 +167,17 @@ void URTSAutoOrderComponent::BeginPlay()
     //{
     //    GameMode->AddAutoOrderActor(Owner);
     //}
+	// TODO Craig
+	// Just use a timer here or something
+	
+}
+
+void URTSAutoOrderComponent::TickComponent(float DeltaTime, enum ELevelTick TickType,
+	FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	CheckAutoOrders();
 }
 
 void URTSAutoOrderComponent::CheckAutoOrders()
@@ -320,5 +331,8 @@ float URTSAutoOrderComponent::GetAcquisitionRadius(const FRTSOrderTypeWithIndex&
 	}
 
 	return AttackComponent->GetAcquisitionRadius();*/
-	return 0.0f;
+
+	return 500.0f;
+	
+	//return 0.0f;
 }

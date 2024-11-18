@@ -262,6 +262,36 @@ void URTSOrderComponent::ClearOrderQueue()
 
 void URTSOrderComponent::InsertOrderBeforeCurrentOrder(const FRTSOrderData& Order)
 {
+    // It is impossible for clients to issue orders. Clients need to issue orders using their player controller.
+    if (!GetOwner()->HasAuthority())
+    {
+        UE_LOG(LogTemp, Error,
+               TEXT("The order %s was send from a client. It is impossible for clients to issue orders. Clients need "
+                    "to issue orders using their player controller. "),
+               *Order.ToString());
+        return;
+    }
+
+    if (!CheckOrder(Order))
+    {
+        return;
+    }
+
+    // Queue the current order.
+    OrderQueue.Insert(CurrentOrder, 0);
+
+    // Save home location of the current order.
+    ARTSOrderAIController* Controller = Cast<ARTSOrderAIController>(Cast<APawn>(GetOwner())->GetController());
+    if (Controller != nullptr)
+    {
+        LastOrderHomeLocation = Controller->GetHomeLocation();
+    }
+
+    // Directly obey the passed order.
+    ObeyOrder(Order);
+
+    // Set to true after obey order to not use the last order home location for the current order.
+    bIsHomeLocationSet = true;
 }
 
 TSoftClassPtr<URTSOrder> URTSOrderComponent::GetCurrentOrderType() const

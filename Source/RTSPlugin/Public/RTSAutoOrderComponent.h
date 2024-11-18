@@ -37,6 +37,7 @@ public:
 
 	//~ Begin UActorComponent Interface
 	virtual void BeginPlay() override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	//~ End UActorComponent Interface
 
 	void CheckAutoOrders();

@@ -15,6 +15,7 @@
 #include "RTSAbilitySystemHelper.h"
 #include "RTSAutoOrderComponent.h"
 #include "RTSOrderGroupExecutionType.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(RTSOrderHelper)
 
@@ -741,10 +742,14 @@ void URTSOrderHelper::FindActorsInChaseDistance(UObject* WorldContextObject, flo
     //TODO
     // NOTE(np): In A Year Of Rain, we're storing detection channels for units in the game instance.
     // Find all targets in acquisition radius.
-    /*URTSGameInstance* GameInstance = URTSUtilities::GetRTSGameInstance(WorldContextObject);
+    //URTSGameInstance* GameInstance = URTSUtilities::GetRTSGameInstance(WorldContextObject);
+
+    TArray<TEnumAsByte<EObjectTypeQuery> > ObjectTypes { UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn) };
     UKismetSystemLibrary::CapsuleOverlapActors(WorldContextObject, OrderedActorLocation, AcquisitionRadius, 10000.0f,
-                                               GameInstance->GetPawnDetectionChannels(), APawn::StaticClass(),
-                                               ActorsToIgnore, ActorsInRange);*/
+                                              ObjectTypes, APawn::StaticClass(),
+                                               ActorsToIgnore, ActorsInRange);
+
+   
 
     if (ActorsInRange.Num() == 0)
     {

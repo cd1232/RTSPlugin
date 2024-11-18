@@ -25,26 +25,28 @@ URTSAttackOrder::URTSAttackOrder()
     SuccessTagRequirements.TargetBlockedTags.AddTag(URTSGlobalTags::Status_Changing_IsAlive());
 }
 
+void URTSAttackOrder::CreateIndividualTargetLocations(const TArray<AActor*>& OrderedActors,
+    const FRTSOrderTargetData& TargetData, TArray<FVector2D>& OutTargetLocations) const
+{
+    Super::CreateIndividualTargetLocations(OrderedActors, TargetData, OutTargetLocations);
+}
+
 float URTSAttackOrder::GetRequiredRange(const AActor* OrderedActor, int32 Index) const
 {
-    return 10.0f;
+    return 50.0f;
 
     // TODO
     // Range would probably come from equipped weapon?
     //return URTSAbilitySystemHelper::GetAttributeValue(OrderedActor, URTSAttackAttributeSet::GetRangeAttribute());
 }
 
-//void URTSAttackOrder::CreateIndividualTargetLocations(const TArray<AActor*>& OrderedActors, const FRTSOrderTargetData& TargetData, TArray<FVector2D>& OutTargetLocations) const
-//{
-//    Super::CreateIndividualTargetLocations(OrderedActors, TargetData, OutTargetLocations);
-//}
-//
-//
-//float URTSAttackOrder::GetTargetScore(const AActor* OrderedActor, const FRTSOrderTargetData& TargetData, int32 Index) const
-//{
-//    // TODO
-//    return 0.0f;
-//}
+float URTSAttackOrder::GetTargetScore(const AActor* OrderedActor, const FRTSOrderTargetData& TargetData,
+    int32 Index) const
+{
+    float Score = Super::GetTargetScore(OrderedActor, TargetData, Index);
+
+    return Score;
+}
 
 bool URTSAttackOrder::AreAutoOrdersAllowedDuringOrder() const
 {

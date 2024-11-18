@@ -10,6 +10,7 @@
 #include "RTSOrderWithBehavior.h"
 #include "RTSOrderHelper.h"
 #include "RTSOrderBlackboardHelper.h"
+#include "RTSStopOrder.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(RTSOrderAIController)
 
@@ -36,21 +37,18 @@ void ARTSOrderAIController::OnPossess(APawn* InPawn)
 {
     Super::OnPossess(InPawn);
 
-    // TODO Craig
-  // Testing removing stop order
-  // This will probably break blackboard component
-//    StopOrder.LoadSynchronous();
+    StopOrder.LoadSynchronous();
 
     UBlackboardComponent* BlackboardComponent = nullptr;
 
     if (UseBlackboard(CharacterBlackboardAsset, BlackboardComponent))
     {
         //    // Setup blackboard.
-        //    SetBlackboardValues(FRTSOrderData(StopOrder.Get()), InPawn->GetActorLocation());
+        SetBlackboardValues(FRTSOrderData(StopOrder.Get()), InPawn->GetActorLocation());
     }
 
-    //UBehaviorTree* BehaviorTree = URTSOrderHelper::GetBehaviorTree(StopOrder.Get());
-    //RunBehaviorTree(BehaviorTree);
+    UBehaviorTree* BehaviorTree = URTSOrderHelper::GetBehaviorTree(StopOrder.Get());
+    RunBehaviorTree(BehaviorTree);
 }
 
 void ARTSOrderAIController::Tick(float DeltaTime)
@@ -80,6 +78,16 @@ void ARTSOrderAIController::Tick(float DeltaTime)
     }
 
     BehaviorTreeResult = EBTNodeResult::InProgress;
+}
+
+FVector ARTSOrderAIController::GetHomeLocation()
+{
+    if (!VerifyBlackboard())
+    {
+        return FVector::ZeroVector;
+    }
+
+    return Blackboard->GetValueAsVector(URTSOrderBlackboardHelper::BLACKBOARD_KEY_HOME_LOCATION);
 }
 
 TSoftClassPtr<URTSStopOrder> ARTSOrderAIController::GetStopOrder() const
@@ -145,13 +153,6 @@ void ARTSOrderAIController::SetBlackboardValues(const FRTSOrderData& Order, cons
 void ARTSOrderAIController::ApplyOrder(const FRTSOrderData& Order, UBehaviorTree* BehaviorTree)
 {
     UBehaviorTreeComponent* BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(BrainComponent);
-    if (BehaviorTreeComponent == nullptr && BehaviorTree != nullptr)
-    {
-        //UBehaviorTree* BehaviorTree = URTSOrderHelper::GetBehaviorTree(StopOrder.Get());
-        RunBehaviorTree(BehaviorTree);
-    }
-
-    BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(BrainComponent);
     if (BehaviorTreeComponent != nullptr && BehaviorTree != nullptr)
     {
         // Make sure to really restart the tree if the same same tree that is currently executing is passed in.
@@ -195,20 +196,3 @@ bool ARTSOrderAIController::VerifyBlackboard() const
     return true;
 }
 
-void ARTSOrderAIController::OnTreeFinished()
-{
-    if (!VerifyBlackboard())
-    {
-        return;
-    }
-
-    // TODO
-    // How do we know if it has succeeded or failed?
-    BehaviorTreeResult = EBTNodeResult::Succeeded;
-
-    UBehaviorTreeComponent* BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(BrainComponent);
-    /* if (BehaviorTreeComponent != nullptr)
-     {
-         BehaviorTreeComponent->OnBehaviorTreeFinished.RemoveAll(this);
-     }*/
-}

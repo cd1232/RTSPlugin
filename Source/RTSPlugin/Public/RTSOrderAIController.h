@@ -32,6 +32,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	// AAIController
 
+	FVector GetHomeLocation();
+
 	UFUNCTION(BlueprintPure)
     TSoftClassPtr<URTSStopOrder> GetStopOrder() const;
 
@@ -44,9 +46,6 @@ private:
 	void ApplyOrder(const FRTSOrderData& Order, UBehaviorTree* BehaviorTree);
 
 	bool VerifyBlackboard() const;
-
-	UFUNCTION()
-	void OnTreeFinished();
 
 private:
 	FRTSOrderCallback CurrentOrderResultCallback;
